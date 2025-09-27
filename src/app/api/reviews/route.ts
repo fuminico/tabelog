@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 
-const prisma = new PrismaClient();
 const postTimestamps = new Map<string, number>();
 const POST_INTERVAL_SECONDS = 60;
 
