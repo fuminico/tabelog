@@ -6,10 +6,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id, 10);
-    if (isNaN(id)) {
-      return NextResponse.json({ error: 'Invalid store ID' }, { status: 400 });
-    }
+    const { id } = params;
 
     const store = await prisma.store.findUnique({
       where: { id },
