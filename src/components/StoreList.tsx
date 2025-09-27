@@ -30,7 +30,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 100 } },
+  show: { y: 0, opacity: 1 },
 };
 
 const StoreList = ({ stores }: StoreListProps) => {
@@ -45,8 +45,8 @@ const StoreList = ({ stores }: StoreListProps) => {
         <motion.div
           key={store.id}
           variants={itemVariants}
+          transition={{ type: "spring", stiffness: 100 }}
           whileHover={{ scale: 1.03, y: -5 }}
-          transition={{ type: 'spring', stiffness: 300 }}
         >
           <Link href={`/stores/${store.id}`} className="block h-full">
             <Card className="h-full bg-secondary border-border/60 hover:border-primary/50 transition-colors duration-300 flex flex-col overflow-hidden">
