@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Tag } from 'lucide-react';
 
 interface Store {
-  id: number;
+  id: string;
   name: string;
   category: string;
   address: string;
