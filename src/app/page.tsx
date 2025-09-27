@@ -10,8 +10,10 @@ interface Store {
 }
 
 async function getStores(): Promise<Store[]> {
-  // Use a relative path for the API endpoint
-  const res = await fetch('/api/stores', { cache: 'no-store' });
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3001';
+  const res = await fetch(`${baseUrl}/api/stores`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch stores');
   }
