@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import AnimatedPage from '@/components/AnimatedPage';
 import StoreList from '@/components/StoreList';
 import { prisma } from '@/lib/prisma';
