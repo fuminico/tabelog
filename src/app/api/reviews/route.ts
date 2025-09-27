@@ -8,15 +8,10 @@ const POST_INTERVAL_SECONDS = 60;
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const storeIdStr = searchParams.get('store_id');
+    const store_id = searchParams.get('store_id');
 
-    if (!storeIdStr) {
+    if (!store_id) {
       return NextResponse.json({ error: 'store_id is required' }, { status: 400 });
-    }
-
-    const store_id = parseInt(storeIdStr, 10);
-    if (isNaN(store_id)) {
-      return NextResponse.json({ error: 'Invalid store_id' }, { status: 400 });
     }
 
     const reviews = await prisma.review.findMany({
@@ -46,8 +41,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { store_id, rating, comment } = body;
 
-    if (store_id === undefined || rating === undefined || !comment) {
-      return NextResponse.json({ error: 'store_id, rating, and comment are required' }, { status: 400 });
+    if (!store_id || typeof store_id !== 'string' || rating === undefined || !comment) {
+      return NextResponse.json({ error: 'store_id (string), rating, and comment are required' }, { status: 400 });
     }
     
     if (typeof rating !== 'number' || rating < 1 || rating > 5) {

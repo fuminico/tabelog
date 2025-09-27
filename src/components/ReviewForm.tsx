@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ReviewFormProps {
-  storeId: number;
+  storeId: string;
 }
 
 const ReviewForm = ({ storeId }: ReviewFormProps) => {

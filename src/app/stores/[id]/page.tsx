@@ -8,7 +8,7 @@ import AnimatedPage from '@/components/AnimatedPage';
 import { UtensilsCrossed, Star, MessageSquare, CalendarDays } from 'lucide-react';
 
 interface Store {
-  id: number;
+  id: string;
   name: string;
   category: string;
   address: string;
@@ -17,7 +17,7 @@ interface Store {
 }
 
 interface Review {
-  id: number;
+  id: string;
   rating: number;
   comment: string;
   created_at: string;
