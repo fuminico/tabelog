@@ -6,11 +6,12 @@ interface Store {
   name: string;
   category: string;
   address: string;
+  photo_url: string | null;
 }
 
 async function getStores(): Promise<Store[]> {
-  // APIのURLを絶対パスで指定
-  const res = await fetch('http://localhost:3001/api/stores', { cache: 'no-store' });
+  // Use a relative path for the API endpoint
+  const res = await fetch('/api/stores', { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch stores');
   }
