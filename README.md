@@ -1,77 +1,119 @@
-# 簡易レビューサイト
+# Tabelog Clone | モダンな店舗レビューサイト
 
-## 概要
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffuminico%2Ftabelog)
 
-このプロジェクトは、Next.jsを使用して構築されたシンプルな店舗レビューサイトです。ユーザーは店舗情報を登録し、各店舗に対してレビュー（評価とコメント）を投稿することができます。
+これは、Next.js (App Router), Prisma, Supabase (PostgreSQL) を使用して構築された、高機能な店舗レビューサイトのプロトタイプです。洗練されたダークテーマのUIと、堅牢なバックエンドを備えています。
 
-## 主な機能
+---
 
-- **店舗管理機能**
-  - 店舗の一覧表示
-  - 店舗の詳細情報の表示
-  - 新規店舗の登録
-- **レビュー機能**
-  - 店舗ごとのレビュー一覧表示
-  - レビューの投稿
+## 機能要件 (Features)
 
-## 使用技術スタック
+-   **店舗管理**:
+    -   店舗の一覧表示（画像付きカードレイアウト）
+    -   店舗の詳細情報の表示
+    -   画像URLを含む、新規店舗の登録
+-   **レビュー機能**:
+    -   店舗ごとのレビュー一覧表示
+    -   評価（5段階）とコメントの投稿
+-   **UI/UX**:
+    -   Framer Motionによるスムーズなページ遷移とアイテム表示アニメーション
+    -   shadcn/ui と Tailwind CSS による、モダンでレスポンシブなダークテーマUI
+-   **スパム対策**:
+    -   レビュー投稿時の簡易CAPTCHA（計算問題）
+    -   APIレベルでのレートリミット（同一IPからの連続投稿を制限）
 
-本プロジェクトでは、モダンなWeb開発技術を採用しています。
+## 技術スタック (Tech Stack)
 
-- **フロントエンド**:
-  - フレームワーク: Next.js (App Router)
-  - 言語: TypeScript
-  - UI: Tailwind CSS, shadcn/ui, Radix UI
-  - アニメーション: Framer Motion
-- **バックエンド**:
-  - API: Next.js API Routes
-- **データベース**:
-  - 開発環境: SQLite
-  - 本番環境（移行想定）: Supabase (PostgreSQL)
-- **スパム対策**:
-  - 簡易CAPTCHA
-  - 投稿間隔の制御
+-   **フレームワーク**: [Next.js](https://nextjs.org/) (App Router)
+-   **言語**: [TypeScript](https://www.typescriptlang.org/)
+-   **UI**: [React](https://reactjs.org/), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), [Framer Motion](https://www.framer.com/motion/)
+-   **ORM**: [Prisma](https://www.prisma.io/)
+-   **データベース**: [PostgreSQL](https://www.postgresql.org/) ([Supabase](https://supabase.com/))
+-   **デプロイ**: [Vercel](https://vercel.com/)
 
-## データベース設計
+## データベース設計 (Database Schema)
 
-### ER図
+IDには、SupabaseのConnection Poolerと互換性のあるUUID形式を採用しています。
 
+```prisma
+model Store {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  address     String
+  category    String
+  photo_url   String?
+  description String?
+  created_at  DateTime @default(now())
+  reviews     Review[]
+}
+
+model Review {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  store_id   String   @db.Uuid
+  rating     Int
+  comment    String
+  created_at DateTime @default(now())
+  store      Store    @relation(fields: [store_id], references: [id], onDelete: Cascade)
+}
 ```
-+-------------------+        +-------------------+
-|     stores        | 1    n |     reviews       |
-+-------------------+        +-------------------+
-| id (PK)           |<------>| id (PK)           |
-| name              |        | store_id (FK)     |
-| address           |        | rating            |
-| category          |        | comment           |
-| photo_url         |        | created_at        |
-| description       |        +-------------------+
-| created_at        |
-+-------------------+
-```
 
-## API設計
+---
 
-### 店舗管理API
+## 開発環境の構築 (Getting Started)
 
-- `GET /api/stores`: 店舗一覧を取得
-- `GET /api/stores/{id}`: 指定した店舗の詳細情報を取得
-- `POST /api/stores`: 新しい店舗を登録
+### 1. 前提条件 (Prerequisites)
 
-### レビュー管理API
+-   [Node.js](https://nodejs.org/en/) (v18.x 以降)
+-   [npm](https://www.npmjs.com/) (v8.x 以降)
+-   [Git](https://git-scm.com/)
+-   [Supabase](https://supabase.com/) アカウント
 
-- `GET /api/reviews?store_id={id}`: 指定した店舗のレビュー一覧を取得
-- `POST /api/reviews`: 新しいレビューを投稿
+### 2. インストールとセットアップ
 
-## 開発環境のセットアップ（予定）
+1.  **リポジトリをクローンします。**
+    ```bash
+    git clone https://github.com/fuminico/tabelog.git
+    cd tabelog
+    ```
 
-```bash
-# 1. 依存関係のインストール
-npm install
+2.  **依存関係をインストールします。**
+    ```bash
+    npm install
+    ```
 
-# 2. データベースのマイグレーション
-npx prisma migrate dev
+3.  **データベースをセットアップします。**
+    -   Supabaseで新しいプロジェクトを作成します。
+    -   プロジェクトのルートに `.env` ファイルを作成します。
+    -   プロジェクトの `Settings` > `Database` に移動し、**Connection Pooling**用の接続文字列（URI）をコピーします。
+    -   コピーした接続文字列を `DATABASE_URL` として `.env` ファイルに貼り付けます。
+      ```.env
+      # Supabase Connection Pooler URL
+      DATABASE_URL="postgresql://postgres.[YOUR-REF]:[YOUR-PASSWORD]@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+      ```
 
-# 3. 開発サーバーの起動
-npm run dev
-```
+4.  **データベーススキーマを適用します。**
+    SupabaseのSQL Editorを開き、`prisma/migrations/.../migration.sql` の内容を貼り付けて実行するか、手動でテーブルを作成してください。（`prisma migrate` はConnection Poolerでは動作しません）
+
+5.  **(任意) 初期データを投入します。**
+    デモ用の店舗データを投入するには、SupabaseのSQL Editorで `prisma/seed.sql` (手動で作成) を実行するか、アプリケーションから店舗を登録してください。
+
+6.  **開発サーバーを起動します。**
+    ```bash
+    npm run dev
+    ```
+    ブラウザで `http://localhost:3001` を開くと、アプリケーションが表示されます。
+
+## デプロイ (Deployment)
+
+このプロジェクトはVercelへのデプロイに最適化されています。
+
+1.  リポジトリをGitHubにプッシュします。
+2.  Vercelで新しいプロジェクトを作成し、GitHubリポジトリをインポートします。
+3.  **環境変数を設定します。**
+    -   Vercelのプロジェクト設定で、`DATABASE_URL` という名前の環境変数を追加します。
+    -   値には、Supabaseの**Connection Pooling**用接続文字列を貼り付けます。
+    -   **重要**: 接続文字列の末尾に、必ず `?sslmode=require&pgbouncer=true` を追加してください。
+      ```
+      postgresql://postgres.[REF]:[PASS]@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true
+      ```
+4.  「Deploy」ボタンを押すと、ビルドとデプロイが自動的に開始されます。
