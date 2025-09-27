@@ -25,8 +25,8 @@ export async function POST(request: Request) {
         name,
         address,
         category,
-        photo_url,
-        description,
+        photo_url: photo_url ?? null,
+        description: description ?? null,
       },
     });
 
